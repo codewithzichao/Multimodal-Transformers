@@ -1,6 +1,6 @@
 # Meme Classification for Tamil Language at EACL2021 Workshop
 
-Source code for EACL2021 workshop: Meme Classification for Tamil Language.
+Our Source code for EACL2021 workshop: Meme Classification for Tamil Language.
 
 **Updated:** Source code is released!🤩
 > I will release the code very soon.
