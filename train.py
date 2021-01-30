@@ -1,8 +1,5 @@
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
 import torch.optim as optim
-from torchvision.transforms import transforms
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from sklearn.model_selection import StratifiedKFold
 from tensorboardX import SummaryWriter
@@ -72,9 +69,6 @@ class Trainer(object):
         # amp
         self.model, self.optimizer = amp.initialize(self.model, self.optimizer, opt_level="O1")
         # amp
-
-        '''self.ema=EMA(self.model,0.999)
-        self.ema.register()'''
 
     def train(self):
         self.model.train()
