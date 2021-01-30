@@ -1,6 +1,5 @@
 import argparse
 
-
 def MyArgs(model_name="xlm-roberta", base_path="/Users/codewithzichao/Desktop/competitions/meme_EACL2021", \
            epochs=50, batch_size=8, max_norm=0.25, accum_num=8, fold_num=5):
     parser = argparse.ArgumentParser()

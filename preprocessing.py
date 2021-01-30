@@ -100,7 +100,6 @@ def get_longest_length(data_path):
     return ans
 
 
-
 if __name__=="__main__":
     base_path="/Users/codewithzichao/Desktop/competitions/meme_EACL2021"
     total_data_path=base_path+"/data/train_captions.csv"
