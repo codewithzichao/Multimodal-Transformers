@@ -1,7 +1,5 @@
 import os
 import torch
-import torch.nn as nn
-import torch.optim as optim
 import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader
 from preprocessing import demoji,zip_image_text
@@ -11,10 +9,6 @@ from model import MyModel
 from tqdm import tqdm
 import numpy as np
 import codecs
-from torchvision.transforms import transforms
-from PIL import Image
-import pandas as pd
-from sklearn.metrics import precision_score,recall_score,f1_score,classification_report
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -39,11 +33,8 @@ test_data_origin = zip_image_text(picture_path, text_path)
 test_data = MyTestDataset(test_data_origin, roberta_tokenizer)
 test_loader = DataLoader(test_data, batch_size=1, shuffle=False)
 
-# 记得改回来
 label2idx = {"not_troll": 0, "troll": 1}
 idx2label = {0: "not_troll", 1: "troll"}
-
-# 模型
 
 #######################################################################################################
 # 构造inference函数
@@ -110,33 +101,6 @@ def merge_all_test_and_to_csv(probs_list, image_names,pred_data_base_path):
         f.close()
 
 #######################################################################################################
-# 加入伪标签
-def merge_all_test_and_to_csv_pseudo(probs_list, image_names,output_path):
-
-    prob1, prob2, prob3, prob4, prob5 = probs_list[0], probs_list[1], probs_list[2], probs_list[3], probs_list[4]
-    avg_prob = (prob1 + prob2 + prob3 + prob4 + prob5) / 5.0
-
-    y_preds = []
-
-    assert len(avg_prob)==len(image_names)
-
-    for i in range(len(avg_prob)):
-        if np.max(avg_prob[i])>0.99:
-            assert test_data_origin[i][-1]==image_names[i]
-            y_preds.append({"imagename":image_names[i],"captions":test_data_origin[i][1],"label":idx2label[np.argmax(avg_prob[i])]})
-        #y_preds.append(idx2label[np.argmax(item)])
-
-    str_format = "{imagename}\t{captions}\t{label}\n"
-    with codecs.open(output_path, "w", encoding="utf-8") as f:
-        f.write("imagename\tcaptions\tlabel\n")
-
-        for idx, item in tqdm(enumerate(y_preds)):
-            f.write(str_format.format(imagename=item["imagename"],captions=item["captions"],label=item["label"]))
-
-        f.flush()
-        f.close()
-
-#######################################################################################################
 
 print("start testing!")
 
@@ -153,9 +117,7 @@ probs5,images5=test_and_to_csv(test_loader,pred_data_base_path,num=5)
 
 print("start testing avg model!")
 probs_list=[probs1,probs2,probs3,probs4,probs5]
-#pseudo_path=base_path+"/pseudo.csv"
 merge_all_test_and_to_csv(probs_list,images1,pred_data_base_path)
-#merge_all_test_and_to_csv_pseudo(probs_list,images1,pseudo_path)
 
 print("end testing!")
 print("finished all testing!")
